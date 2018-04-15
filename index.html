@@ -323,7 +323,7 @@
               
                 
                 <a class="post-title-link" href="/2018/04/15/Windows安装pytorch/" itemprop="url">
-                  2018_first
+                  Windows安装pytorch
                 </a>
               
             
@@ -377,45 +377,16 @@
       
         
           
-            <p>#简介<br>官网现在不能在Windows下安装pytorch（计划0.4版本后开始支持），但为了能在电脑上方便使用pycharm调写代码，发现知乎用户<a href="https://www.zhihu.com/people/pu-jia-chen/activities" target="_blank" rel="external">蒲嘉宸</a>在维护编译好的Windows安装包，直接在anaconda3环境下就可以安装使用。本文也参考了他的知乎<a href="https://www.cnblogs.com/denny402/p/7520063.html%22fashion-mnish%22" target="_blank" rel="external">文章</a>的一些内容。</p>
-<p>#安装条件<br>作者提供了不同的安装包针对不同的环境，但有一些基本的条件需要注意：</p>
-<ul>
-<li>Anaconda3 x64 (with Python 3.5/3.6) </li>
-<li>Windows 64位系统（Windows 7 或 Windows Server 2008 及以上）</li>
-<li>GPU版本还需要任意版本的 CUDA （包内置了CUDA 8 / 9 的部分主要二进制文件）</li>
-</ul>
-<p>如果没有GPU的话，只是为了快速上手可以使用cpu版本。为了加快conda的安装速度，可以使用清华的源</p>
-<blockquote>
-<p>conda config –add channels <a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/" target="_blank" rel="external">https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</a><br>conda config –add channels <a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/" target="_blank" rel="external">https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/</a><br>conda config –set show_channel_urls yes</p>
-</blockquote>
-<p>#安装conda包<br>可以通过在线直接安装，但作者提供<a href="https://pan.baidu.com/s/1dF6ayLr#list/path=/pytorch" target="_blank" rel="external">百度云</a>直接下载安装文件本地安装，快速便捷。如果电脑有cuda和cudnn的支持，可以选择带有cuda和cudnn标识的版本，如果没有就安装只是cpu标识的版本。<strong>经过本人测试发现，cuda的capacity值需要大于5才能支持使用，如果过下，依然代码可以通过，但是无法使用GPU加速。但是如果没有cuda的GPU，就会报错，这时就只能coda remove pytorch然后重新安装cpu版本</strong>。安装代码如下：</p>
-<pre><code>cd &quot;下载包的路径&quot;
-conda install numpy mkl cffi
-conda install pytorch????.tar.bz2
-</code></pre><p>如果出现以下的错误提示，就是很可能GPU不支持，马上更换为cpu版本。</p>
-<pre><code>Traceback (most recent call last):
-    File &quot;test.py&quot;, line 2, in &lt;module&gt;
-        import torch
-    File &quot;C:\Anaconda3\lib\site-packages\torch\__init__.py&quot;, line 41, in &lt;module&gt;
-        from torch._C import *
-ImportError: DLL load failed: The specified module could not be found.
-</code></pre><p>#测试代码</p>
-<pre><code># CUDA TEST
-import torch
-x = torch.Tensor([1.0])
-xx = x.cuda()
-print(xx)
-
-# CUDNN TEST
-from torch.backends import cudnn
-print(cudnn.is_acceptable(xx))
-</code></pre><p>如果CUDA工作不正常，那就不能使用.cuda()将模型和数据通过GPU进行加速了。而如果cuDNN不能正常工作，那就使用如下代码关掉它：</p>
-<pre><code>cudnn.enabled = False
-</code></pre><p>#安装torchvision<br>Torchvision不是pytorch的一部分内容，是Python的另外一个包，需要用pip来安装，使用conda是安装不了的。<strong>但如果直接使用pip install torchvision安装可能会出错，经过查询资料应该使用pip install –no-deps torchvision命令，而很多其他不知道哪儿抄来的博客写的是pip install no-deps torchvision，坑人不浅</strong></p>
-<p>#测试pytorch是否安装成功<br>为了初步尝试pytorch在本地电脑的使用体验，可以去官方下载例子，也可以使用这个<a href="https://www.cnblogs.com/denny402/p/7520063.html%22fashion-mnish%22" target="_blank" rel="external">fashion-mnist</a>例子来运行体验下本地测试的性能速度。</p>
-<p>#收获<br>Windows的cmd太难用了，查询一款超好用的本地命令行终端<a href="http://cmder.net/" target="_blank" rel="external">cmder</a>，颜值可功能都友好，同时支持一些Linux的命令操作，更加的方便操作。</p>
-
-          
+          简介官网现在不能在Windows下安装pytorch（计划0.4版本后开始支持），但为了能在电脑上方便使用pycharm调写代码，发现知乎用户蒲嘉宸在维护编译好的Windows安装包，直接在anaconda3环境下就可以安装使用。本文也参考了他的知乎文章的一些内容。
+安装条件作者提供了不同的安装包针
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/15/Windows安装pytorch/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
