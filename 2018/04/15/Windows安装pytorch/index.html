@@ -99,7 +99,7 @@ Anaconda3 x64 (with Python">
 安装条件作者提供了不同的安装包针对不同的环境，但有一些基本的条件需要注意：
 
 Anaconda3 x64 (with Python">
-<meta property="og:updated_time" content="2018-04-15T16:54:56.506Z">
+<meta property="og:updated_time" content="2018-04-15T16:58:59.770Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Windows安装pytorch">
 <meta name="twitter:description" content="简介官网现在不能在Windows下安装pytorch（计划0.4版本后开始支持），但为了能在电脑上方便使用pycharm调写代码，发现知乎用户蒲嘉宸在维护编译好的Windows安装包，直接在anaconda3环境下就可以安装使用。本文也参考了他的知乎文章的一些内容。
@@ -388,10 +388,10 @@ Anaconda3 x64 (with Python">
 <li>GPU版本还需要任意版本的 CUDA （包内置了CUDA 8 / 9 的部分主要二进制文件）</li>
 </ul>
 <p>如果没有GPU的话，只是为了快速上手可以使用cpu版本。为了加快conda的安装速度，可以使用清华的源</p>
-<blockquote>
-<p>conda config –add channels <a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/" target="_blank" rel="external">https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</a><br>conda config –add channels <a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/" target="_blank" rel="external">https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/</a><br>conda config –set show_channel_urls yes</p>
-</blockquote>
-<h1 id="安装conda包"><a href="#安装conda包" class="headerlink" title="安装conda包"></a>安装conda包</h1><p>可以通过在线直接安装，但作者提供<a href="https://pan.baidu.com/s/1dF6ayLr#list/path=/pytorch" target="_blank" rel="external">百度云</a>直接下载安装文件本地安装，快速便捷。如果电脑有cuda和cudnn的支持，可以选择带有cuda和cudnn标识的版本，如果没有就安装只是cpu标识的版本。<strong>经过本人测试发现，cuda的capacity值需要大于5才能支持使用，如果过下，依然代码可以通过，但是无法使用GPU加速。但是如果没有cuda的GPU，就会报错，这时就只能coda remove pytorch然后重新安装cpu版本</strong>。安装代码如下：</p>
+<pre><code>conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+conda config --set show_channel_urls yes
+</code></pre><h1 id="安装conda包"><a href="#安装conda包" class="headerlink" title="安装conda包"></a>安装conda包</h1><p>可以通过在线直接安装，但作者提供<a href="https://pan.baidu.com/s/1dF6ayLr#list/path=/pytorch" target="_blank" rel="external">百度云</a>直接下载安装文件本地安装，快速便捷。如果电脑有cuda和cudnn的支持，可以选择带有cuda和cudnn标识的版本，如果没有就安装只是cpu标识的版本。<strong>经过本人测试发现，cuda的capacity值需要大于5才能支持使用，如果过下，依然代码可以通过，但是无法使用GPU加速。但是如果没有cuda的GPU，就会报错，这时就只能coda remove pytorch然后重新安装cpu版本</strong>。安装代码如下：</p>
 <pre><code>cd &quot;下载包的路径&quot;
 conda install numpy mkl cffi
 conda install pytorch????.tar.bz2
