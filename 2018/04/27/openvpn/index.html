@@ -1,0 +1,820 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="以前波哥搭建的openvpn因为服务器到期就被关停了，然后现在不能访问服务器中只开放了内网访问地址的数据库，所有需要自己搭建一个openvpn。开始在网上搜索找到的是pptpd，安装运行简单，但说可能不稳定，而且之前用的也是openvpn的客户端，所以重新搭建安装openvpn，在此记录下过程，大部分是别人博客内容中的搬运，但也算是一种体验。
+安装openvpn首先，在服务器端安装 OpenVPN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ubuntu下安装openvpn">
+<meta property="og:url" content="http://yoursite.com/2018/04/27/openvpn/index.html">
+<meta property="og:site_name" content="半岛铁盒">
+<meta property="og:description" content="以前波哥搭建的openvpn因为服务器到期就被关停了，然后现在不能访问服务器中只开放了内网访问地址的数据库，所有需要自己搭建一个openvpn。开始在网上搜索找到的是pptpd，安装运行简单，但说可能不稳定，而且之前用的也是openvpn的客户端，所以重新搭建安装openvpn，在此记录下过程，大部分是别人博客内容中的搬运，但也算是一种体验。
+安装openvpn首先，在服务器端安装 OpenVPN">
+<meta property="og:updated_time" content="2018-04-27T06:30:03.182Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ubuntu下安装openvpn">
+<meta name="twitter:description" content="以前波哥搭建的openvpn因为服务器到期就被关停了，然后现在不能访问服务器中只开放了内网访问地址的数据库，所有需要自己搭建一个openvpn。开始在网上搜索找到的是pptpd，安装运行简单，但说可能不稳定，而且之前用的也是openvpn的客户端，所以重新搭建安装openvpn，在此记录下过程，大部分是别人博客内容中的搬运，但也算是一种体验。
+安装openvpn首先，在服务器端安装 OpenVPN">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/27/openvpn/"/>
+
+
+
+
+
+  <title> Ubuntu下安装openvpn | 半岛铁盒 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">半岛铁盒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">好记性不如烂笔头</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/27/openvpn/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lb">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半岛铁盒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Ubuntu下安装openvpn
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-27T14:23:33+08:00">
+                2018-04-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>以前波哥搭建的openvpn因为服务器到期就被关停了，然后现在不能访问服务器中只开放了内网访问地址的数据库，所有需要自己搭建一个openvpn。开始在网上搜索找到的是pptpd，安装运行简单，但说可能不稳定，而且之前用的也是openvpn的客户端，所以重新搭建安装openvpn，在此记录下过程，大部分是别人博客内容中的搬运，但也算是一种体验。</p>
+<h1 id="安装openvpn"><a href="#安装openvpn" class="headerlink" title="安装openvpn"></a>安装openvpn</h1><p>首先，在服务器端安装 OpenVPN 服务。我们可以很方便地通过 apt-get 安装，另外我们也需要安装easy-rsa：</p>
+<pre><code>$ apt-get install openvpn
+$ apt-get install easy-rsa  
+</code></pre><p>安装成功后，拷贝“easy-rsa”到openvpn文件夹，并进入到该目录：</p>
+<pre><code>$ make-cadir ~/openvpn-ca
+$ cd ~/openvpn-ca
+</code></pre><p>也相当于如下的命令：</p>
+<pre><code>$ cd /home/username/
+$ mkdir openvpn-ca
+$ cp -r /usr/share/easy-rsa/* /home/username/openvpn-ca
+</code></pre><h1 id="配置CA变量"><a href="#配置CA变量" class="headerlink" title="配置CA变量"></a>配置CA变量</h1><p>进入 openvpn-ca 目录之后，用 vim (或者任意编辑器) 打开 vars 文件，到最后一部分，你将会看到如下内容：</p>
+<pre><code>. . .
+export KEY_COUNTRY=&quot;US&quot;
+export KEY_PROVINCE=&quot;CA&quot;
+export KEY_CITY=&quot;SanFrancisco&quot;
+export KEY_ORG=&quot;Fort-Funston&quot;
+export KEY_EMAIL=&quot;me@myhost.mydomain&quot;
+export KEY_OU=&quot;MyOrganizationalUnit&quot;
+. . .
+</code></pre><p>修改为任意你想要修改的值，只要不留空就好了：</p>
+<pre><code>. . .
+export KEY_COUNTRY=&quot;CN&quot;
+export KEY_PROVINCE=&quot;SiChuan&quot;
+export KEY_CITY=&quot;Chengdu&quot;
+export KEY_ORG=&quot;wsn&quot;
+export KEY_EMAIL=&quot;what@the.fuck&quot;
+export KEY_OU=&quot;Community&quot;
+. . .
+</code></pre><p>然后，还需要将 KEY_NAME 改为你喜欢的，这里简单起见，我们改成 server：（<strong>如果不改成server，在下面有个命令生成服务器配置文件需要注意更换</strong>）</p>
+<pre><code>export KEY_NAME=&quot;server&quot;
+</code></pre><p>然后，保存并关闭文件。</p>
+<h1 id="构建-Certificate-Authority"><a href="#构建-Certificate-Authority" class="headerlink" title="构建 Certificate Authority"></a>构建 Certificate Authority</h1><p>在刚才的目录中，执行 source vars ，然后，你将会看到如下输出：</p>
+<pre><code>NOTE: If you run ./clean-all, I will be doing a rm -rf on /home/xlzd/openvpn-ca/keys
+</code></pre><p>然后执行：</p>
+<pre><code>$ ./clean-all
+$ ./build-ca
+</code></pre><p>这将会启动创建根证书颁发密钥、证书的过程。由于我们刚才修改了 vars 文件，所有值应该都会自动填充。所以，一路回车就好了。这时会显示输出之前新更改的配置信息。到此，我们就有了创建以下步骤需要的 CA 证书。</p>
+<h1 id="创建服务器端证书、密钥和加密文件"><a href="#创建服务器端证书、密钥和加密文件" class="headerlink" title="创建服务器端证书、密钥和加密文件"></a>创建服务器端证书、密钥和加密文件</h1><p>执行 ./build-key-server server 命令(<strong>此处的server与上面export KEY_NAME=”server”一致</strong>)，制作过程中一路回车，中间出现 challenge password ，不要输入任何值回车就行，最后的会有两个问题，你需要输入两次 y 注册证书和提交：</p>
+<pre><code>. . .
+Certificate is to be certified until May  1 17:51:16 2026 GMT (3650 days)
+Sign the certificate? [y/n]:y
+
+
+1 out of 1 certificate requests certified, commit? [y/n]y
+Write out database with 1 new entries
+Data Base Updated
+</code></pre><p>然后还需要生成一些其他东西，在终端执行 ./build-dh，这个操作大约会花费几分钟不等。然后，我们可以生成 HMAC 签名加强服务器的 TLS 完整性验证功能：</p>
+<pre><code>$openvpn --genkey --secret keys/ta.key
+</code></pre><h1 id="生成客户端证书、密钥对"><a href="#生成客户端证书、密钥对" class="headerlink" title="生成客户端证书、密钥对"></a>生成客户端证书、密钥对</h1><p>这一步之后可能会执行多次以生成不同的证书，这里我们以 client_one 作为第一组密钥对的名字：</p>
+<pre><code>$cd ~/openvpn-ca
+$source vars
+$./build-key client_one
+</code></pre><p>跟刚才一样，一路回车就好。<br>如果你想生成一个带密码保护的凭证，可以使用build-key-pass命令：</p>
+<pre><code>$cd ~/openvpn-ca
+$source vars
+$./build-key-pass client_one
+</code></pre><h1 id="配置-OpenVPN-服务"><a href="#配置-OpenVPN-服务" class="headerlink" title="配置 OpenVPN 服务"></a>配置 OpenVPN 服务</h1><p>首先，复制文件到 OpenVPN 的目录下：</p>
+<pre><code>$ cd ~/openvpn-ca/keys
+$ sudo cp ca.crt ca.key server.crt server.key ta.key dh2048.pem /etc/openvpn
+</code></pre><p>然后，复制并解压一个 OpenVPN 的配置示例：</p>
+<pre><code>$cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/  
+$cd /etc/openvpn  
+$gunzip -d /etc/openvpn/server.conf.gz
+</code></pre><p>然后更改server.conf中的配置：</p>
+<pre><code>#这里是重点，必须指定SSL/TLS root certificate (ca),  
+#certificate(cert), and private key (key)  
+#ca文件是服务端和客户端都必须使用的，但不需要ca.key
+#服务端和客户端指定各自的.crt和.key
+#请注意路径,可以使用以配置文件开始为根的相对路径,  
+#也可以使用绝对路径  
+#请小心存放.key密钥文件  
+ca ca.crt
+cert server.crt（**与export KEY_NAME=&quot;server&quot;一致**）  
+key server.key（**与export KEY_NAME=&quot;server&quot;一致**） 
+dh dh2048.pem  
+#取消前面的;注释，这样可以使客户端的所有流量都必须经过VPN转发 
+push &quot;redirect-gateway def1 bypass-dhcp&quot;  
+#取消前面的;注释，并设置DNS服务器的地址，该DNS信息将推送到  
+#客户端并设置到TAP网卡中  
+push &quot;dhcp-option DNS 223.5.5.5&quot;
+push &quot;dhcp-option DNS 114.114.114.114&quot;   
+#再找到 tls-auth 位置，去掉注释，并在下面新增一行
+tls-auth ta.key 0 # This file is secret
+key-direction 0
+#取消前面的;注释，使客户端之间可以互通，根据实际需要决定是否 
+#开启，默认客户端之间是不能直接通讯的  
+client-to-client  
+duplicate-cn  
+user nobody  
+group nogroup  
+#取消前面的;注释，并设置log保存的位置  
+log openvpn.log  
+</code></pre><h1 id="调整服务器网络配置"><a href="#调整服务器网络配置" class="headerlink" title="调整服务器网络配置"></a>调整服务器网络配置</h1><h2 id="允许IP转发"><a href="#允许IP转发" class="headerlink" title="允许IP转发"></a>允许IP转发</h2><p>编辑 /etc/sysctl.conf 文件，去掉 net.ipv4.ip_forward 设置前的注释：</p>
+<pre><code>net.ipv4.ip_forward=1
+</code></pre><p>输入 sudo sysctl -p 以读取文件并对当前会话生效。</p>
+<h2 id="调整-UFW-规则"><a href="#调整-UFW-规则" class="headerlink" title="调整 UFW 规则"></a>调整 UFW 规则</h2><pre><code>iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE （通用方法，自动获取eth0网卡的IP地址）  
+</code></pre><p><strong>其中eth0是内网地址，这个也是保证能够ping通内网的其他服务器的保证。</strong></p>
+<p>接着需要修改 /etc/default/ufw 文件，找到 DEFAULT_FORWARD_POLICY 设置，修改为：</p>
+<pre><code>DEFAULT_FORWARD_POLICY=&quot;ACCEPT&quot;
+</code></pre><h1 id="打开-OpenVPN-端口并使变化生效"><a href="#打开-OpenVPN-端口并使变化生效" class="headerlink" title="打开 OpenVPN 端口并使变化生效"></a>打开 OpenVPN 端口并使变化生效</h1><p>执行下面的命令：</p>
+<pre><code>$ sudo ufw allow 1194/udp
+$ sudo ufw disable
+$ sudo ufw enable
+</code></pre><h1 id="启动-OpenVPN"><a href="#启动-OpenVPN" class="headerlink" title="启动 OpenVPN"></a>启动 OpenVPN</h1><pre><code>service openvpn restart  
+</code></pre><h1 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h1><p>然后将服务器端生成的证书和密钥文件，在/home/username/openvpn-ca文件夹下（ca.crt，client_one.crt，client_one.key，ta.key）下载到本地。以及/usr/share/doc/openvpn/examples/sample-config-files/client.conf文件下载到本地，然后修改client.conf为client.ovpn，并且更改其中配置：</p>
+<pre><code>client #指明这是客户端
+dev tun #基于路由的隧道
+proto udp #采用UDP协议
+remote 222.214.XXX.XXX 1194 #服务端IP及端口号
+ca ca.crt #证书及密钥们
+cert client_one.crt(一定与自己的文件名吻合)
+key client_one.key(一定与自己的文件名吻合)
+tls-auth ta.key 1 #TLS密钥，1表示客户端
+key-direction 1 #新增
+</code></pre><p>安装主要参考：<a href="https://blog.csdn.net/w746805370/article/details/51774609" target="_blank" rel="external">怎样在 Ubuntu 16.04 上安装 OpenVPN 服务(转自知乎)</a>与<a href="https://www.cnblogs.com/ilanni/p/4681740.html" target="_blank" rel="external">烂泥：ubuntu 14.04搭建OpenVPN服务器</a></p>
+<p>配置文件：<a href="http://www.cnblogs.com/ilanni/p/46951122.html" target="_blank" rel="external">烂泥：openvpn配置文件详解</a></p>
+<p>ping同内网服务器：<a href="http://www.cnblogs.com/ilanni/p/4700908.html" target="_blank" rel="external">烂泥：openvpn tun模式下客户端与内网机器通信</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/15/Windows安装pytorch/" rel="next" title="Windows安装pytorch">
+                <i class="fa fa-chevron-left"></i> Windows安装pytorch
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="lb" />
+          <p class="site-author-name" itemprop="name">lb</p>
+           
+              <p class="site-description motion-element" itemprop="description">天空未留痕迹，鸟儿却已飞过</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安装openvpn"><span class="nav-number">1.</span> <span class="nav-text">安装openvpn</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置CA变量"><span class="nav-number">2.</span> <span class="nav-text">配置CA变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构建-Certificate-Authority"><span class="nav-number">3.</span> <span class="nav-text">构建 Certificate Authority</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建服务器端证书、密钥和加密文件"><span class="nav-number">4.</span> <span class="nav-text">创建服务器端证书、密钥和加密文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#生成客户端证书、密钥对"><span class="nav-number">5.</span> <span class="nav-text">生成客户端证书、密钥对</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置-OpenVPN-服务"><span class="nav-number">6.</span> <span class="nav-text">配置 OpenVPN 服务</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调整服务器网络配置"><span class="nav-number">7.</span> <span class="nav-text">调整服务器网络配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#允许IP转发"><span class="nav-number">7.1.</span> <span class="nav-text">允许IP转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调整-UFW-规则"><span class="nav-number">7.2.</span> <span class="nav-text">调整 UFW 规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#打开-OpenVPN-端口并使变化生效"><span class="nav-number">8.</span> <span class="nav-text">打开 OpenVPN 端口并使变化生效</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动-OpenVPN"><span class="nav-number">9.</span> <span class="nav-text">启动 OpenVPN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#客户端配置"><span class="nav-number">10.</span> <span class="nav-text">客户端配置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lb</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
