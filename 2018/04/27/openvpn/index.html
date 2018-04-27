@@ -95,7 +95,7 @@
 <meta property="og:site_name" content="半岛铁盒">
 <meta property="og:description" content="以前波哥搭建的openvpn因为服务器到期就被关停了，然后现在不能访问服务器中只开放了内网访问地址的数据库，所有需要自己搭建一个openvpn。开始在网上搜索找到的是pptpd，安装运行简单，但说可能不稳定，而且之前用的也是openvpn的客户端，所以重新搭建安装openvpn，在此记录下过程，大部分是别人博客内容中的搬运，但也算是一种体验。
 安装openvpn首先，在服务器端安装 OpenVPN">
-<meta property="og:updated_time" content="2018-04-27T06:30:03.182Z">
+<meta property="og:updated_time" content="2018-04-27T06:33:31.702Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubuntu下安装openvpn">
 <meta name="twitter:description" content="以前波哥搭建的openvpn因为服务器到期就被关停了，然后现在不能访问服务器中只开放了内网访问地址的数据库，所有需要自己搭建一个openvpn。开始在网上搜索找到的是pptpd，安装运行简单，但说可能不稳定，而且之前用的也是openvpn的客户端，所以重新搭建安装openvpn，在此记录下过程，大部分是别人博客内容中的搬运，但也算是一种体验。
@@ -447,8 +447,8 @@ $gunzip -d /etc/openvpn/server.conf.gz
 #也可以使用绝对路径  
 #请小心存放.key密钥文件  
 ca ca.crt
-cert server.crt（**与export KEY_NAME=&quot;server&quot;一致**）  
-key server.key（**与export KEY_NAME=&quot;server&quot;一致**） 
+cert server.crt（与export KEY_NAME=&quot;server&quot;一致）  
+key server.key（与export KEY_NAME=&quot;server&quot;一致） 
 dh dh2048.pem  
 #取消前面的;注释，这样可以使客户端的所有流量都必须经过VPN转发 
 push &quot;redirect-gateway def1 bypass-dhcp&quot;  
