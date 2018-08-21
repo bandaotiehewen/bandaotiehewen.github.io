@@ -1,0 +1,800 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="svn,openvpn,chance," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="事因最近服务器又要到期了，六台每天是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新建SVN和转移Chance项目到IDEA的记录">
+<meta property="og:url" content="http://yoursite.com/2018/08/21/新建SVN和转移Chance项目到IDEA的记录/index.html">
+<meta property="og:site_name" content="半岛铁盒">
+<meta property="og:description" content="事因最近服务器又要到期了，六台每天是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的">
+<meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-24-21.png">
+<meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-31-39.png">
+<meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-44-29.png">
+<meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-51-09.png">
+<meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-21_13-12-58.png">
+<meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-21_13-16-29.png">
+<meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-21_13-20-23.png">
+<meta property="og:updated_time" content="2018-08-21T06:02:07.109Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="新建SVN和转移Chance项目到IDEA的记录">
+<meta name="twitter:description" content="事因最近服务器又要到期了，六台每天是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的">
+<meta name="twitter:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-24-21.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/08/21/新建SVN和转移Chance项目到IDEA的记录/"/>
+
+
+
+
+
+  <title> 新建SVN和转移Chance项目到IDEA的记录 | 半岛铁盒 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">半岛铁盒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">好记性不如烂笔头</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/21/新建SVN和转移Chance项目到IDEA的记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lb">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="半岛铁盒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                新建SVN和转移Chance项目到IDEA的记录
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-21T13:48:40+08:00">
+                2018-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/安装配置问题/" itemprop="url" rel="index">
+                    <span itemprop="name">安装配置问题</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="事因"><a href="#事因" class="headerlink" title="事因"></a>事因</h1><p>最近服务器又要到期了，六台每天是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的校园实验实例，以及机器学习相关学习的平台，所以必须关闭32。32上面有很多内容，包括之前从140上面转移过来的脚本，以及SVN上面存储的代码。因此，面临重新建立SVN服务器到63上面的工作，以及使用IDEA重新拖取校园实验项目的工作。</p>
+<h1 id="问题一：新建SVN服务器"><a href="#问题一：新建SVN服务器" class="headerlink" title="问题一：新建SVN服务器"></a>问题一：新建SVN服务器</h1><p>搭建SVN服务器很简单，几句命令行就搞定。网上很多内容就不祥记，主要是在新建目录的时候出现了疑惑：</p>
+<p>新建SVN目录和版本库：</p>
+<pre><code>mkdir /home/chance/svn
+chmod -R 777 /home/chance/svn
+svnadmin create /home/chance/svn
+</code></pre><p>这样就会在svn目录下生成：<br><img src="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-24-21.png" alt="SVN服务器目录文件"></p>
+<p>进行配置权限密码和分组，并可以通过如下命令启动SVN：</p>
+<pre><code>svnserve -d -r /home/chance/svn
+</code></pre><p>（-d：表示在后台运行 ，-r：指定服务器的根目录）</p>
+<p>用如下命令查看svnserve是否已经运行:</p>
+<pre><code>ps aux | grep svn
+</code></pre><p><img src="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-31-39.png" alt="查看svn服务"></p>
+<p><strong>然后通过小乌龟查看svn://192.168.1.81就可以查看svn下的项目，但网上很多都是在/home/chance/svn中新建repository版本库，这时是通过svn://192.168.1.81/repository访问。也就是启动时候要注意的版本库文件目录跟启动命令行目录的关系。</strong></p>
+<h1 id="问题二：防火墙端口没打开"><a href="#问题二：防火墙端口没打开" class="headerlink" title="问题二：防火墙端口没打开"></a>问题二：防火墙端口没打开</h1><p>因为在之前安装了openvpn服务，为了转发内部数据包ping同，导致打开了utw的防火墙。开启以后默认所有的端口都不能访问，需要访问某个端口必须打开访问权限。</p>
+<p>导致在客户端使用小乌龟访问SVN访问失败，开始一直怀疑是上述SVN的版本库的路径问题，但试了很久SVN的启动和路径问题，始终无法访问。<strong>仔细看了连接失败提示，是因为无法链接，一下想起来之前防火墙端口问题</strong></p>
+<p>首先查看当下防火墙端口开放情况：<br><img src="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-44-29.png" alt="查看防火墙状态"></p>
+<p>打开SVN端口：<br><img src="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-51-09.png" alt="打开防火墙的3690端口"></p>
+<p>这下客户端小乌龟才能成功通过svn://192.168.1.81的地址内容。<strong>可见遇见问题不能靠意识感觉，需要时刻关注问题和提示</strong></p>
+<h1 id="问题三：OpenVpn访问外网"><a href="#问题三：OpenVpn访问外网" class="headerlink" title="问题三：OpenVpn访问外网"></a>问题三：OpenVpn访问外网</h1><p>在脸上vpn下载SVN服务器内容的时候总是不能访问外网，很不方便，在网上查询找到解决办法，将下面代码执行。</p>
+<pre><code>iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -j MASQUERADE
+</code></pre><h1 id="问题四：IDEA通过SVN新建项目"><a href="#问题四：IDEA通过SVN新建项目" class="headerlink" title="问题四：IDEA通过SVN新建项目"></a>问题四：IDEA通过SVN新建项目</h1><p>在IDEA中新建项目，选择从SVN导入。但途中遇到一个如下所示的问题，在项目JAVA文件的右下方有个红色的J符号，最开始个人感觉是找不到引用jar包，这又是主观武断判定的结果，然后就默认的到处更新jar引入的问题，但调试半天依然无法解决问题。经过查</p>
+<blockquote>
+<p>原因：项目不可以编译，那么就可能是编译路径，编译Source的地址等等不对导致的</p>
+</blockquote>
+<p>解决办法有三个步骤：</p>
+<blockquote>
+<p>第一步：File里打开project structure找到Modules，其中有个Sources，点击右边第一个×，然后点击下面的Add Content Root按钮(这个按钮不容易看见…仔细看,就在那个Mark as下面),重新选择刚刚的项目，就可以了。</p>
+</blockquote>
+<p><img src="http://egmimg.walkingnet.com/Snipaste_2018-08-21_13-12-58.png" alt="重新选择编译项目"></p>
+<blockquote>
+<p>第二步：设定Project中的”Project compiler output” ，如下图所示，一般都是项目名下面新建的out文件夹下。</p>
+</blockquote>
+<p><img src="http://egmimg.walkingnet.com/Snipaste_2018-08-21_13-16-29.png" alt="项目的编译输出路径"></p>
+<blockquote>
+<p>第三步：在Modules设置里勾选”Inherit project compile path” </p>
+</blockquote>
+<p><img src="http://egmimg.walkingnet.com/Snipaste_2018-08-21_13-20-23.png" alt="模型的编译输出路径"></p>
+<h1 id="问题五：激活IDEA"><a href="#问题五：激活IDEA" class="headerlink" title="问题五：激活IDEA"></a>问题五：激活IDEA</h1><p>之前很多都是通过idea license server在网上找可用服务的网址来验证，今天找了很多都不行，然后发现一个通过激活码的方法，将下列激活码输入。</p>
+<pre><code>EB101IWSWD-eyJsaWNlbnNlSWQiOiJFQjEwMUlXU1dEIiwibGljZW5zZWVOYW1lIjoibGFuIHl1IiwiYXNzaWduZWVOYW1lIjoiIiwiYXNzaWduZWVFbWFpbCI6IiIsImxpY2Vuc2VSZXN0cmljdGlvbiI6IkZvciBlZHVjYXRpb25hbCB1c2Ugb25seSIsImNoZWNrQ29uY3VycmVudFVzZSI6ZmFsc2UsInByb2R1Y3RzIjpbeyJjb2RlIjoiSUkiLCJwYWlkVXBUbyI6IjIwMTgtMTAtMTQifSx7ImNvZGUiOiJSUzAiLCJwYWlkVXBUbyI6IjIwMTgtMTAtMTQifSx7ImNvZGUiOiJXUyIsInBhaWRVcFRvIjoiMjAxOC0xMC0xNCJ9LHsiY29kZSI6IlJEIiwicGFpZFVwVG8iOiIyMDE4LTEwLTE0In0seyJjb2RlIjoiUkMiLCJwYWlkVXBUbyI6IjIwMTgtMTAtMTQifSx7ImNvZGUiOiJEQyIsInBhaWRVcFRvIjoiMjAxOC0xMC0xNCJ9LHsiY29kZSI6IkRCIiwicGFpZFVwVG8iOiIyMDE4LTEwLTE0In0seyJjb2RlIjoiUk0iLCJwYWlkVXBUbyI6IjIwMTgtMTAtMTQifSx7ImNvZGUiOiJETSIsInBhaWRVcFRvIjoiMjAxOC0xMC0xNCJ9LHsiY29kZSI6IkFDIiwicGFpZFVwVG8iOiIyMDE4LTEwLTE0In0seyJjb2RlIjoiRFBOIiwicGFpZFVwVG8iOiIyMDE4LTEwLTE0In0seyJjb2RlIjoiUFMiLCJwYWlkVXBUbyI6IjIwMTgtMTAtMTQifSx7ImNvZGUiOiJDTCIsInBhaWRVcFRvIjoiMjAxOC0xMC0xNCJ9LHsiY29kZSI6IlBDIiwicGFpZFVwVG8iOiIyMDE4LTEwLTE0In0seyJjb2RlIjoiUlNVIiwicGFpZFVwVG8iOiIyMDE4LTEwLTE0In1dLCJoYXNoIjoiNjk0NDAzMi8wIiwiZ3JhY2VQZXJpb2REYXlzIjowLCJhdXRvUHJvbG9uZ2F0ZWQiOmZhbHNlLCJpc0F1dG9Qcm9sb25nYXRlZCI6ZmFsc2V9-Gbb7jeR8JWOVxdUFaXfJzVU/O7c7xHQyaidCnhYLp7v32zdeXiHUU7vlrrm5y9ZX0lmQk3plCCsW+phrC9gGAPd6WDKhkal10qVNg0larCR2tQ3u8jfv1t2JAvWrMOJfFG9kKsJuw1P4TozZ/E7Qvj1cupf/rldhoOmaXMyABxNN1af1RV3bVhe4FFZe0p7xlIJF/ctZkFK62HYmh8V3AyhUNTzrvK2k+t/tlDJz2LnW7nYttBLHld8LabPlEEjpTHswhzlthzhVqALIgvF0uNbIJ5Uwpb7NqR4U/2ob0Z+FIcRpFUIAHEAw+RLGwkCge5DyZKfx+RoRJ/In4q/UpA==-MIIEPjCCAiagAwIBAgIBBTANBgkqhkiG9w0BAQsFADAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBMB4XDTE1MTEwMjA4MjE0OFoXDTE4MTEwMTA4MjE0OFowETEPMA0GA1UEAwwGcHJvZDN5MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxcQkq+zdxlR2mmRYBPzGbUNdMN6OaXiXzxIWtMEkrJMO/5oUfQJbLLuMSMK0QHFmaI37WShyxZcfRCidwXjot4zmNBKnlyHodDij/78TmVqFl8nOeD5+07B8VEaIu7c3E1N+e1doC6wht4I4+IEmtsPAdoaj5WCQVQbrI8KeT8M9VcBIWX7fD0fhexfg3ZRt0xqwMcXGNp3DdJHiO0rCdU+Itv7EmtnSVq9jBG1usMSFvMowR25mju2JcPFp1+I4ZI+FqgR8gyG8oiNDyNEoAbsR3lOpI7grUYSvkB/xVy/VoklPCK2h0f0GJxFjnye8NT1PAywoyl7RmiAVRE/EKwIDAQABo4GZMIGWMAkGA1UdEwQCMAAwHQYDVR0OBBYEFGEpG9oZGcfLMGNBkY7SgHiMGgTcMEgGA1UdIwRBMD+AFKOetkhnQhI2Qb1t4Lm0oFKLl/GzoRykGjAYMRYwFAYDVQQDDA1KZXRQcm9maWxlIENBggkA0myxg7KDeeEwEwYDVR0lBAwwCgYIKwYBBQUHAwEwCwYDVR0PBAQDAgWgMA0GCSqGSIb3DQEBCwUAA4ICAQC9WZuYgQedSuOc5TOUSrRigMw4/+wuC5EtZBfvdl4HT/8vzMW/oUlIP4YCvA0XKyBaCJ2iX+ZCDKoPfiYXiaSiH+HxAPV6J79vvouxKrWg2XV6ShFtPLP+0gPdGq3x9R3+kJbmAm8w+FOdlWqAfJrLvpzMGNeDU14YGXiZ9bVzmIQbwrBA+c/F4tlK/DV07dsNExihqFoibnqDiVNTGombaU2dDup2gwKdL81ua8EIcGNExHe82kjF4zwfadHk3bQVvbfdAwxcDy4xBjs3L4raPLU3yenSzr/OEur1+jfOxnQSmEcMXKXgrAQ9U55gwjcOFKrgOxEdek/Sk1VfOjvS+nuM4eyEruFMfaZHzoQiuw4IqgGc45ohFH0UUyjYcuFxxDSU9lMCv8qdHKm+wnPRb0l9l5vXsCBDuhAGYD6ss+Ga+aDY6f/qXZuUCEUOH3QUNbbCUlviSz6+GiRnt1kA9N2Qachl+2yBfaqUqr8h7Z2gsx5LcIf5kYNsqJ0GavXTVyWh7PYiKX4bs354ZQLUwwa/cG++2+wNWP+HtBhVxMRNTdVhSm38AknZlD+PTAsWGu9GyLmhti2EnVwGybSD2Dxmhxk3IPCkhKAK+pl0eWYGZWG3tJ9mZ7SowcXLWDFAk0lRJnKGFMTggrWjV8GYpw5bq23VmIqqDLgkNzuoog==
+</code></pre><p>然后将下面代码放在电脑里面的hosts文件中。hosts文件的地址是：C:\Windows\System32\drivers\etc\hosts</p>
+<pre><code>0.0.0.0 account.jetbrains.com
+</code></pre><h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p><strong>遇见问题不能主观判定或者自己觉得是怎样，仔细看提示，分析，思考，友好的查询解决方法，这样才能高效率的找到解决办法。还有就是在每一个问题的时候，不仅只是当时把问题解决，还需要当时理解原因，并保持回忆，知道基本的问题来由和解决的方法，并在下次遇见就能快速检索并给出答案</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/svn/" rel="tag"># svn</a>
+          
+            <a href="/tags/openvpn/" rel="tag"># openvpn</a>
+          
+            <a href="/tags/chance/" rel="tag"># chance</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/27/openvpn/" rel="next" title="Ubuntu下安装openvpn">
+                <i class="fa fa-chevron-left"></i> Ubuntu下安装openvpn
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="lb" />
+          <p class="site-author-name" itemprop="name">lb</p>
+           
+              <p class="site-description motion-element" itemprop="description">天空未留痕迹，鸟儿却已飞过</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#事因"><span class="nav-number">1.</span> <span class="nav-text">事因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题一：新建SVN服务器"><span class="nav-number">2.</span> <span class="nav-text">问题一：新建SVN服务器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题二：防火墙端口没打开"><span class="nav-number">3.</span> <span class="nav-text">问题二：防火墙端口没打开</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题三：OpenVpn访问外网"><span class="nav-number">4.</span> <span class="nav-text">问题三：OpenVpn访问外网</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题四：IDEA通过SVN新建项目"><span class="nav-number">5.</span> <span class="nav-text">问题四：IDEA通过SVN新建项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题五：激活IDEA"><span class="nav-number">6.</span> <span class="nav-text">问题五：激活IDEA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结语"><span class="nav-number">7.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lb</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
