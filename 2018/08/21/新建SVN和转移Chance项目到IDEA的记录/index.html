@@ -71,7 +71,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="svn,openvpn,chance," />
+  <meta name="keywords" content="openvpn,svn,chance," />
 
 
 
@@ -87,12 +87,12 @@
 
 
 
-<meta name="description" content="事因最近服务器又要到期了，六台每天是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的">
+<meta name="description" content="事因最近服务器又要到期了，六台每个是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="新建SVN和转移Chance项目到IDEA的记录">
 <meta property="og:url" content="http://yoursite.com/2018/08/21/新建SVN和转移Chance项目到IDEA的记录/index.html">
 <meta property="og:site_name" content="半岛铁盒">
-<meta property="og:description" content="事因最近服务器又要到期了，六台每天是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的">
+<meta property="og:description" content="事因最近服务器又要到期了，六台每个是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的">
 <meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-24-21.png">
 <meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-31-39.png">
 <meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-44-29.png">
@@ -100,10 +100,10 @@
 <meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-21_13-12-58.png">
 <meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-21_13-16-29.png">
 <meta property="og:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-21_13-20-23.png">
-<meta property="og:updated_time" content="2018-08-21T06:02:07.109Z">
+<meta property="og:updated_time" content="2018-08-21T06:07:27.586Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="新建SVN和转移Chance项目到IDEA的记录">
-<meta name="twitter:description" content="事因最近服务器又要到期了，六台每天是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的">
+<meta name="twitter:description" content="事因最近服务器又要到期了，六台每个是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的">
 <meta name="twitter:image" content="http://egmimg.walkingnet.com/Snipaste_2018-08-20_22-24-21.png">
 
 
@@ -401,7 +401,7 @@
       
 
       
-        <h1 id="事因"><a href="#事因" class="headerlink" title="事因"></a>事因</h1><p>最近服务器又要到期了，六台每天是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的校园实验实例，以及机器学习相关学习的平台，所以必须关闭32。32上面有很多内容，包括之前从140上面转移过来的脚本，以及SVN上面存储的代码。因此，面临重新建立SVN服务器到63上面的工作，以及使用IDEA重新拖取校园实验项目的工作。</p>
+        <h1 id="事因"><a href="#事因" class="headerlink" title="事因"></a>事因</h1><p>最近服务器又要到期了，六台每个是4000，一年24000。想着boss应该不会续费这么多，就主动建议停掉一半的备份，这样就只需要三台，费用12000，应该在boss的接受范围内。mainserver和redis备份都还简单，直接停掉，分别都只用一台。这样loadbalance，mainserver和registerserver都在177这台机器。105存储所有的redis实例，63用来运行新的校园实验实例，以及机器学习相关学习的平台，所以必须关闭32。32上面有很多内容，包括之前从140上面转移过来的脚本，以及SVN上面存储的代码。因此，面临重新建立SVN服务器到63上面的工作，以及使用IDEA重新拖取校园实验项目的工作。</p>
 <h1 id="问题一：新建SVN服务器"><a href="#问题一：新建SVN服务器" class="headerlink" title="问题一：新建SVN服务器"></a>问题一：新建SVN服务器</h1><p>搭建SVN服务器很简单，几句命令行就搞定。网上很多内容就不祥记，主要是在新建目录的时候出现了疑惑：</p>
 <p>新建SVN目录和版本库：</p>
 <pre><code>mkdir /home/chance/svn
@@ -467,9 +467,9 @@ svnadmin create /home/chance/svn
       
         <div class="post-tags">
           
-            <a href="/tags/svn/" rel="tag"># svn</a>
-          
             <a href="/tags/openvpn/" rel="tag"># openvpn</a>
+          
+            <a href="/tags/svn/" rel="tag"># svn</a>
           
             <a href="/tags/chance/" rel="tag"># chance</a>
           
@@ -575,7 +575,7 @@ svnadmin create /home/chance/svn
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">1</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
